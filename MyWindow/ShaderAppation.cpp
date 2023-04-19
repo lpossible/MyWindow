@@ -225,7 +225,7 @@ void WinAppation::CleanD3dDevice()
 void WinAppation::Render()
 {
 	HRESULT hr;
-	hr = m_d3ddevice->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xffff0000, 1.0f, 0);
+	m_d3ddevice->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xffff0000, 1.0f, 0);
 	hr = m_d3ddevice->BeginScene();
 	if (SUCCEEDED(hr))
 	{
