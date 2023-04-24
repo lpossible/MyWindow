@@ -18,6 +18,12 @@
     <ClCompile Include="ShaderAppation.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="ShaderSimpler.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DrawUtil.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header.h">
@@ -29,5 +35,16 @@
     <ClInclude Include="ShaderAppation.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="ShaderSimpler.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawUtil.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="C:\Users\luoping\Desktop\D3D9ShaderTutorial-master\ShaderSimpler\ShaderSimpler\ShaderSimpler.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

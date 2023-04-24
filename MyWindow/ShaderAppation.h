@@ -2,6 +2,13 @@
 #include "header.h"
 
 
+enum EShaderType
+{
+	EST_BasicLighting,
+	EST_End
+};
+
+
 class WinAppation
 {
 public:
