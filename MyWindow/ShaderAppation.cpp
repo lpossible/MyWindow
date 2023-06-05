@@ -153,7 +153,7 @@ bool WinAppation::CreateWind(HINSTANCE hInstance, int width, int height, const c
 		::MessageBox(m_hwnd, "d3d设备创建失败", "Error", MB_OK);
 		return false;
 	}
-
+	DrawUtil::GetInstance()->Init(m_d3ddevice);
 	return true;
 }
 

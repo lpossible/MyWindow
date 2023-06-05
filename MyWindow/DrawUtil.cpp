@@ -1,5 +1,5 @@
 #include "DrawUtil.h"
-
+#include "CameraCtrl.h"
 
 DrawUtil* DrawUtil::GetInstance()
 {
@@ -46,7 +46,7 @@ bool DrawUtil::Init(IDirect3DDevice9* pD3DDevice)
 	
 	//¼ÓÔØµÆ¹âºÍshader
 	hr = D3DXCreateBox(pD3DDevice, 10, 10, 10, &m_pLightBox, NULL);
-	m_pEffect = LoadEffect(pD3DDevice, "");
+	m_pEffect = LoadEffect(pD3DDevice, "Shader\\SimpleDraw.fx");
 	if (SUCCEEDED(hr))
 	{
 		return true;
@@ -59,13 +59,16 @@ void DrawUtil::DrawLight(D3DXVECTOR3 pos)
 	D3DXMATRIX matWorld;
 	D3DXMatrixTranslation(&matWorld, pos.x, pos.y, pos.z);
 	
-	D3DXMATRIX matWorldViewProj = matWorld;
-	m_pEffect->SetMatrix("", &matWorldViewProj);
+	D3DXMATRIX matWorldViewProj = matWorld * g_camera.GetViewMat() * g_camera.GetProjectMat();
+	m_pEffect->SetMatrix("matWorldViewPrj", &matWorldViewProj);
 
 	UINT numPass = 0;
 	m_pEffect->Begin(&numPass, 0);
 	m_pEffect->BeginPass(0);
-	m_pLightBox->DrawSubset(0);
+	if (m_pLightBox)
+	{
+		m_pLightBox->DrawSubset(0);
+	}
 	m_pEffect->EndPass();
 	m_pEffect->End();
 }

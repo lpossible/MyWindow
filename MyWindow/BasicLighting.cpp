@@ -57,7 +57,7 @@ void BasicLighting::Render()
 	hr = m_pEffect->End();
 
 	//--画出灯光的位置
-	//DrawingUtil::getInst()->drawLight(m_lightPos);
+	DrawUtil::GetInstance()->DrawLight(m_lightPos);
 
 	ShaderSimpler::Render();
 }
