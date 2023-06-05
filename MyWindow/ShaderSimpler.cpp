@@ -3,11 +3,18 @@
 
 ShaderSimpler::ShaderSimpler()
 {
+	m_pMeshBox = NULL;
+	m_pMeshSphere = NULL;
+	m_pMeshTeapot = NULL;
+	m_pMeshTorus = NULL;
 }
 
 ShaderSimpler::~ShaderSimpler()
 {
-
+	SAFE_DELETE_RELEASE(m_pMeshBox);
+	SAFE_DELETE_RELEASE(m_pMeshSphere);
+	SAFE_DELETE_RELEASE(m_pMeshTeapot);
+	SAFE_DELETE_RELEASE(m_pMeshTorus);
 }
 
 bool ShaderSimpler::Init(IDirect3DDevice9* pD3DDevice)
@@ -52,37 +59,13 @@ void ShaderSimpler::Render()
 
 void ShaderSimpler::DrawMesh()
 {
-
-	switch (m_activeMesh)
-	{
-	case 1:
-		if (m_pMeshTeapot)
-		{
-			m_pMeshTeapot->DrawSubset(0);
-		}
-		break;
-	case 2:
-		if (m_pMeshTorus)
-		{
-			m_pMeshTorus->DrawSubset(0);
-		}
-		break;
-	case 3:
-		if (m_pMeshSphere)
-		{
-			m_pMeshSphere->DrawSubset(0);
-		}
-		break;
-	default:
-		if (m_pMeshBox)
-		{
-			m_pMeshBox->DrawSubset(0);
-		}
-		break;
-	}
+	if (m_pMeshSphere)
+		m_pMeshSphere->DrawSubset(0);
+	if (m_pMeshBox)
+		m_pMeshBox->DrawSubset(0);
 }
 
 ID3DXMesh* ShaderSimpler::LoadMeshFVF(IDirect3DDevice9* pD3DDevice, const char* szFileName, DWORD fvf)
 {
-
+	return NULL;
 }

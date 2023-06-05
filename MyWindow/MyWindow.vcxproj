@@ -134,14 +134,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BasicLighting.cpp" />
+    <ClCompile Include="CameraCtrl.cpp" />
     <ClCompile Include="DrawUtil.cpp" />
+    <ClCompile Include="SGITrackball.cpp" />
     <ClCompile Include="ShaderAppation.cpp" />
     <ClCompile Include="ShaderSimpler.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BasicLighting.h" />
+    <ClInclude Include="CameraCtrl.h" />
     <ClInclude Include="DrawUtil.h" />
     <ClInclude Include="header.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="SGITrackball.h" />
     <ClInclude Include="ShaderAppation.h" />
     <ClInclude Include="ShaderSimpler.h" />
   </ItemGroup>

@@ -32,5 +32,5 @@ private:
 	//
 	ID3DXMesh* m_pMeshTorus;
 
-	DWORD m_activeMesh = 1;
+	DWORD m_activeMesh = 4;
 };

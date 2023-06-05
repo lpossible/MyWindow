@@ -1,5 +1,8 @@
 #include "ShaderAppation.h"
 #include "resource.h"
+#include "BasicLighting.h"
+#include "CameraCtrl.h"
+#include "DrawUtil.h"
 
 //初始化窗口实例
 WinAppation app;
@@ -16,6 +19,8 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		case IDM_Exit:
 			PostQuitMessage(0);
 			break;
+		case IDM_BasicLighting:
+			app.OpenSampler(EST_BasicLighting);
 		default:
 			break;
 		}
@@ -51,6 +56,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		return -1;
 	}
 
+
+	//
+	g_camera.SetPerspective(45.0f, 800, 600, 10, 5000);
+
+	//
+	app.OpenSampler(EST_BasicLighting);
 	//消息循环
 	MSG uMsg;
 	memset(&uMsg, 0, sizeof(MSG));
@@ -91,7 +102,7 @@ bool WinAppation::CreateWind(HINSTANCE hInstance, int width, int height, const c
 	WNDCLASSEX winClass;
 	memset(&winClass, 0, sizeof(WNDCLASSEX));
 
-	winClass.lpszClassName = L"MyWin";
+	winClass.lpszClassName = "MyWin";
 	winClass.cbSize = sizeof(WNDCLASSEX);
 	winClass.style = CS_HREDRAW | CS_VREDRAW;
 	winClass.lpfnWndProc = WindowProc;
@@ -125,10 +136,10 @@ bool WinAppation::CreateWind(HINSTANCE hInstance, int width, int height, const c
 	AdjustWindowRect(&winRect, style, TRUE);
 
 	//创建窗口
-	m_hwnd = CreateWindowEx(NULL, L"MyWin", L"MySimpleShader", style, winRect.left, winRect.top, width, height, NULL, NULL, hInstance, NULL);
+	m_hwnd = CreateWindowEx(NULL, "MyWin", "MySimpleShader", style, winRect.left, winRect.top, width, height, NULL, NULL, hInstance, NULL);
 	if (m_hwnd==NULL)
 	{
-		::MessageBox(m_hwnd, L"窗口创建失败", L"Error", MB_OK);
+		::MessageBox(m_hwnd, "窗口创建失败", "Error", MB_OK);
 		return false;
 	}
 
@@ -139,7 +150,7 @@ bool WinAppation::CreateWind(HINSTANCE hInstance, int width, int height, const c
 	//创建d3d设备
 	if (!CreateD3dDevice())
 	{
-		::MessageBox(m_hwnd, L"d3d设备创建失败", L"Error", MB_OK);
+		::MessageBox(m_hwnd, "d3d设备创建失败", "Error", MB_OK);
 		return false;
 	}
 
@@ -159,7 +170,7 @@ bool WinAppation::CreateD3dDevice()
 	m_d3d = Direct3DCreate9(D3D_SDK_VERSION);
 	if (m_d3d == NULL)
 	{
-		::MessageBox(m_hwnd, L"D3D Create failed.", L"Error", MB_OK);
+		::MessageBox(m_hwnd, "D3D Create failed.", "Error", MB_OK);
 		return false;
 	}
 
@@ -169,7 +180,7 @@ bool WinAppation::CreateD3dDevice()
 	if (caps.VertexShaderVersion < D3DVS_VERSION(2, 0)
 		|| caps.PixelShaderVersion < D3DPS_VERSION(2, 0))
 	{
-		::MessageBox(m_hwnd, L"显卡支持的Shader版本太低", L"Error", MB_OK);
+		::MessageBox(m_hwnd, "显卡支持的Shader版本太低", "Error", MB_OK);
 		return false;
 	}
 
@@ -195,22 +206,22 @@ bool WinAppation::CreateD3dDevice()
 	hr = m_d3d->CreateDevice(D3DADAPTER_DEFAULT, devType, m_hwnd, dwBehaviorFlags, &d3dpp, &m_d3ddevice);
 	if (hr==D3DERR_DEVICELOST)
 	{
-		::MessageBox(m_hwnd, L"D3DERR_DEVICELOST", L"Error", MB_OK);
+		::MessageBox(m_hwnd, "D3DERR_DEVICELOST", "Error", MB_OK);
 		return false;
 	}
 	else if (hr==D3DERR_INVALIDCALL)
 	{
-		::MessageBox(m_hwnd, L"D3DERR_INVALIDCALL", L"Error", MB_OK);
+		::MessageBox(m_hwnd, "D3DERR_INVALIDCALL", "Error", MB_OK);
 		return false;
 	}
 	else if (hr == D3DERR_NOTAVAILABLE)
 	{
-		::MessageBox(m_hwnd, L"D3DERR_NOTAVAILABLE", L"Error", MB_OK);
+		::MessageBox(m_hwnd, "D3DERR_NOTAVAILABLE", "Error", MB_OK);
 		return false;
 	}
 	else if (hr == D3DERR_OUTOFVIDEOMEMORY)
 	{
-		::MessageBox(m_hwnd, L"D3DERR_OUTOFVIDEOMEMORY", L"Error", MB_OK);
+		::MessageBox(m_hwnd, "D3DERR_OUTOFVIDEOMEMORY", "Error", MB_OK);
 		return false;
 	}
 	return SUCCEEDED(hr);
@@ -225,11 +236,61 @@ void WinAppation::CleanD3dDevice()
 void WinAppation::Render()
 {
 	HRESULT hr;
-	m_d3ddevice->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xffff0000, 1.0f, 0);
+
+	hr = m_d3ddevice->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,
+		D3DCOLOR_COLORVALUE(0.8f, 0.8f, 0.8f, 1.0f), 1.0f, 0);
 	hr = m_d3ddevice->BeginScene();
 	if (SUCCEEDED(hr))
 	{
+		if (m_pSimpler)
+		{
+			m_pSimpler->Render();
+		}
+		//
+		CallFPS();
+		char szText[512] = { 0 };
+		sprintf_s(szText, "FPS:%.2f", FPS);
+		//DrawUtil::GetInstance()->DrawMyText(szText, 2, 2);
+
 		m_d3ddevice->EndScene();
 		m_d3ddevice->Present(NULL, NULL, NULL, NULL);
+	}
+}
+
+void WinAppation::OpenSampler(EShaderType e)
+{
+	if (m_pSimpler)
+	{
+		delete m_pSimpler;
+		m_pSimpler = NULL;
+	}
+	m_pSimpler = new BasicLighting();
+	::SetWindowText(m_hwnd, "Basic Lighting");
+	if (m_pSimpler)
+	{
+		m_pSimpler->Init(m_d3ddevice);
+	}
+}
+
+void WinAppation::CallFPS()
+{
+	float deltaTime;
+	static DWORD lastTime = timeGetTime();
+	deltaTime = (timeGetTime() - lastTime) * 0.001f;
+	lastTime = timeGetTime();
+
+	static float c = 0;
+	static float sum = 0;
+	if (c < 10)
+	{
+		c += 1.0f;
+		sum += deltaTime;
+	}
+	else
+	{
+		FPS = c / sum;
+
+		c = 0;
+		sum = 0;
 	}
 }
