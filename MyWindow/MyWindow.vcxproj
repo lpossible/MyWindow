@@ -108,13 +108,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\luoping\Desktop\microsoft.dxsdk.d3dx.9.29.952.8\build\native\include;$(DXSDK_DIR)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\luoping\Desktop\microsoft.dxsdk.d3dx.9.29.952.8\build\native\include;$(DXSDK_DIR)Include;E:\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>d3d9.lib;d3dx9.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\Users\luoping\Desktop\microsoft.dxsdk.d3dx.9.29.952.8\build\native\release\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\luoping\Desktop\microsoft.dxsdk.d3dx.9.29.952.8\build\native\release\lib\x64;E:\Visual Leak Detector\lib\Win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -137,19 +137,28 @@
     <ClCompile Include="BasicLighting.cpp" />
     <ClCompile Include="CameraCtrl.cpp" />
     <ClCompile Include="DrawUtil.cpp" />
+    <ClCompile Include="PhongShaing.cpp" />
+    <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="SGITrackball.cpp" />
     <ClCompile Include="ShaderAppation.cpp" />
     <ClCompile Include="ShaderSimpler.cpp" />
+    <ClCompile Include="SingleShader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BasicLighting.h" />
+    <ClInclude Include="C:\Users\luoping\Desktop\D3D9ShaderTutorial-master\ShaderSimpler\ShaderSimpler\resource.h" />
     <ClInclude Include="CameraCtrl.h" />
     <ClInclude Include="DrawUtil.h" />
     <ClInclude Include="header.h" />
-    <ClInclude Include="resource.h" />
+    <ClInclude Include="PhongShading.h" />
+    <ClInclude Include="RenderTarget.h" />
+    <ClInclude Include="resource.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="SGITrackball.h" />
     <ClInclude Include="ShaderAppation.h" />
     <ClInclude Include="ShaderSimpler.h" />
+    <ClInclude Include="SingleShader.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="C:\Users\luoping\Desktop\D3D9ShaderTutorial-master\ShaderSimpler\ShaderSimpler\ShaderSimpler.rc" />

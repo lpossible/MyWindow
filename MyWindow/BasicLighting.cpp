@@ -29,7 +29,7 @@ void BasicLighting::Render()
 	float r = 150;
 	m_lightPos.x = sinf(t) * r;
 	m_lightPos.z = cosf(t) * r;
-	m_lightPos.y = sinf(t) * r;;
+	m_lightPos.y = sinf(t) * r;
 
 	m_pEffect->SetFloatArray("lightPos", (float*)&m_lightPos, 3);
 
@@ -60,4 +60,12 @@ void BasicLighting::Render()
 	DrawUtil::GetInstance()->DrawLight(m_lightPos);
 
 	ShaderSimpler::Render();
+}
+
+void BasicLighting::DrawMesh()
+{
+	if (m_pMeshTeapot)
+	{
+		m_pMeshTeapot->DrawSubset(0);
+	}
 }

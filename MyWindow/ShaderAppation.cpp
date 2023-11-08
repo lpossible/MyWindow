@@ -3,6 +3,9 @@
 #include "BasicLighting.h"
 #include "CameraCtrl.h"
 #include "DrawUtil.h"
+#include "PhongShading.h"
+#include "vld.h"
+#include "RenderTarget.h"
 
 //初始化窗口实例
 WinAppation app;
@@ -21,6 +24,13 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			break;
 		case IDM_BasicLighting:
 			app.OpenSampler(EST_BasicLighting);
+		case ID_SIMPLER_PHONGSHADING:
+			app.OpenSampler(ESS_PongShading);
+			break;
+		case ID_VIEW_SCREENSHOT:
+			//截图
+			app.SetScreenShot(true);
+			break;
 		default:
 			break;
 		}
@@ -30,6 +40,10 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		{
 		case VK_ESCAPE:
 			PostQuitMessage(0);
+			break;
+		case VK_F1:
+			//屏幕内截图
+			app.SetScreenShot(true);
 			break;
 		default:
 			break;
@@ -94,6 +108,16 @@ WinAppation::~WinAppation()
 {
 	SAFE_DELETE_RELEASE(m_d3d);
 	SAFE_DELETE_RELEASE(m_d3ddevice);
+	if (m_pSimpler)
+	{
+		delete m_pSimpler;
+		m_pSimpler = nullptr;
+	}
+	if (m_shotRender)
+	{
+		delete m_shotRender;
+		m_shotRender = nullptr;
+	}
 }
 
 bool WinAppation::CreateWind(HINSTANCE hInstance, int width, int height, const char* name)
@@ -136,7 +160,7 @@ bool WinAppation::CreateWind(HINSTANCE hInstance, int width, int height, const c
 	AdjustWindowRect(&winRect, style, TRUE);
 
 	//创建窗口
-	m_hwnd = CreateWindowEx(NULL, "MyWin", "MySimpleShader", style, winRect.left, winRect.top, width, height, NULL, NULL, hInstance, NULL);
+	m_hwnd = CreateWindowExA(NULL, "MyWin", "MySimpleShader", style, winRect.left, winRect.top, width, height, NULL, NULL, hInstance, NULL);
 	if (m_hwnd==NULL)
 	{
 		::MessageBox(m_hwnd, "窗口创建失败", "Error", MB_OK);
@@ -154,6 +178,9 @@ bool WinAppation::CreateWind(HINSTANCE hInstance, int width, int height, const c
 		return false;
 	}
 	DrawUtil::GetInstance()->Init(m_d3ddevice);
+
+	//
+	m_shotRender = new CRenderTarget(800, 600, D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8);
 	return true;
 }
 
@@ -188,6 +215,8 @@ bool WinAppation::CreateD3dDevice()
 	D3DPRESENT_PARAMETERS d3dpp;
 	memset(&d3dpp, 0, sizeof(d3dpp));
 
+	d3dpp.BackBufferWidth = 800;
+	d3dpp.BackBufferHeight = 600;
 	d3dpp.BackBufferFormat			= D3DFMT_X8R8G8B8;
 	d3dpp.SwapEffect				= D3DSWAPEFFECT_DISCARD;
 	d3dpp.Windowed					= TRUE;
@@ -224,6 +253,9 @@ bool WinAppation::CreateD3dDevice()
 		::MessageBox(m_hwnd, "D3DERR_OUTOFVIDEOMEMORY", "Error", MB_OK);
 		return false;
 	}
+#define QWORD long long
+	 INT64 memory = m_d3ddevice->GetAvailableTextureMem();
+
 	return SUCCEEDED(hr);
 }
 
@@ -236,8 +268,7 @@ void WinAppation::CleanD3dDevice()
 void WinAppation::Render()
 {
 	HRESULT hr;
-
-	hr = m_d3ddevice->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,
+	hr = m_d3ddevice->Clear(NULL, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,
 		D3DCOLOR_COLORVALUE(0.8f, 0.8f, 0.8f, 1.0f), 1.0f, 0);
 	hr = m_d3ddevice->BeginScene();
 	if (SUCCEEDED(hr))
@@ -251,7 +282,11 @@ void WinAppation::Render()
 		char szText[512] = { 0 };
 		sprintf_s(szText, "FPS:%.2f", FPS);
 		//DrawUtil::GetInstance()->DrawMyText(szText, 2, 2);
-
+		if (m_bStartShoot && m_shotRender)
+		{
+			m_bStartShoot = false;
+			m_shotRender->GetBackBufferSurFace(m_d3ddevice);
+		}
 		m_d3ddevice->EndScene();
 		m_d3ddevice->Present(NULL, NULL, NULL, NULL);
 	}
@@ -264,8 +299,20 @@ void WinAppation::OpenSampler(EShaderType e)
 		delete m_pSimpler;
 		m_pSimpler = NULL;
 	}
-	m_pSimpler = new BasicLighting();
-	::SetWindowText(m_hwnd, "Basic Lighting");
+
+	switch (e)
+	{
+	case EST_BasicLighting:
+		m_pSimpler = new BasicLighting();
+		::SetWindowText(m_hwnd, "Basic Lighting");
+		break;
+	case ESS_PongShading:
+		m_pSimpler = new PhongShading();
+		::SetWindowText(m_hwnd, "Phone Lighting");
+		break;
+	default:
+		break;
+	}
 	if (m_pSimpler)
 	{
 		m_pSimpler->Init(m_d3ddevice);

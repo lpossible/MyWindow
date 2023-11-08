@@ -18,11 +18,10 @@ public:
 			const int max_mesh = 5;
 		}
 	}
-
 protected:
-	void DrawMesh();
+	virtual void DrawMesh();
 	ID3DXMesh* LoadMeshFVF(IDirect3DDevice9* pD3DDevice, const char* szFileName, DWORD fvf);
-private:
+public:
 	//球体
 	ID3DXMesh* m_pMeshSphere;
 	//立方体

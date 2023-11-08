@@ -36,6 +36,15 @@
     <ClCompile Include="SGITrackball.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="PhongShaing.cpp">
+      <Filter>Lighting</Filter>
+    </ClCompile>
+    <ClCompile Include="SingleShader.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderTarget.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header.h">
@@ -60,6 +69,18 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="SGITrackball.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PhongShading.h">
+      <Filter>Lighting</Filter>
+    </ClInclude>
+    <ClInclude Include="SingleShader.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderTarget.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\luoping\Desktop\D3D9ShaderTutorial-master\ShaderSimpler\ShaderSimpler\resource.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

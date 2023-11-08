@@ -9,6 +9,7 @@ public:
 public:
 	void Render()override;
 	bool Init(IDirect3DDevice9* pD3DDevice)override;
+	void DrawMesh()override;
 private:
 	ID3DXEffect* m_pEffect;
 	D3DXVECTOR3 m_lightPos;

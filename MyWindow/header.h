@@ -16,8 +16,8 @@
 #include <d3dx9.h>
 #include <d3dx9effect.h>
 
-#pragma comment(lib,"d3d9.lib")
-#pragma comment(lib,"d3dx9.lib")
+//#pragma comment(lib,"d3d9.lib")
+//#pragma comment(lib,"d3dx9.lib")
 
 
 
@@ -27,3 +27,9 @@
 
 const int WIN_WIDTH = 800;
 const int WIN_HEIGHT = 600;
+
+using ID3DTexture = IDirect3DTexture9;
+using ID3DSurface = IDirect3DSurface9;
+using ID3DDevice = IDirect3DDevice9;
+using ID3DVertexBuffer = IDirect3DVertexBuffer9;
+using ID3DIndexBuffer = IDirect3DIndexBuffer9;

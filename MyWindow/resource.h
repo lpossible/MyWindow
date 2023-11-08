@@ -4,6 +4,7 @@
 // Used by ShaderSimpler.rc
 //
 #define IDR_MENU1                       101
+#define ID_VIEW_SCREENSHOT              40017
 #define IDM_Exit                        40002
 #define IDM_BasicLighting               40004
 #define ID_SIMPLER_PHONGSHADING         40005

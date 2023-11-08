@@ -63,6 +63,10 @@ void ShaderSimpler::DrawMesh()
 		m_pMeshSphere->DrawSubset(0);
 	if (m_pMeshBox)
 		m_pMeshBox->DrawSubset(0);
+	if (m_pMeshTeapot)
+	{
+		m_pMeshTeapot->DrawSubset(0);
+	}
 }
 
 ID3DXMesh* ShaderSimpler::LoadMeshFVF(IDirect3DDevice9* pD3DDevice, const char* szFileName, DWORD fvf)

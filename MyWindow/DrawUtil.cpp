@@ -1,5 +1,16 @@
 #include "DrawUtil.h"
 #include "CameraCtrl.h"
+#include <map>
+#include <string>
+
+struct ParamInfo
+{
+	D3DXHANDLE handle;
+	D3DXPARAMETER_DESC desc;
+};
+
+std::map<std::string, ParamInfo> mapParamInfo;
+std::map<std::string, D3DXHANDLE> mapTechInfo;
 
 DrawUtil* DrawUtil::GetInstance()
 {
@@ -92,7 +103,39 @@ ID3DXEffect* DrawUtil::LoadEffect(IDirect3DDevice9* pD3DDevice, const char* szFi
 			const char* szError = (const char*)pError->GetBufferPointer();
 			::MessageBox(NULL, szError, "Error", MB_OK);
 		}
+		return nullptr;
 	}
+
+	//
+	D3DXEFFECT_DESC desc = { 0 };
+	auto hrr = pEffect->GetDesc(&desc);
+	if (FAILED(hrr))
+	{
+		return nullptr;
+	}
+
+	//fx²ÎÊý
+	mapParamInfo.clear();
+	for (UINT i = 0; i < desc.Parameters; i++)
+	{
+		D3DXHANDLE hParam = pEffect->GetParameter(nullptr, i);
+		ParamInfo info;
+		info.handle = hParam;
+		pEffect->GetParameterDesc(hParam, &info.desc);
+		mapParamInfo[info.desc.Name] = info;
+	}
+
+	//
+	mapTechInfo.clear();
+	for (UINT i = 0; i < desc.Techniques; i++)
+	{
+		D3DXHANDLE hTech = pEffect->GetTechnique(i);
+		D3DXTECHNIQUE_DESC desc;
+		pEffect->GetTechniqueDesc(hTech, &desc);
+		mapTechInfo[desc.Name] = hTech;
+	}
+
+
 
 	return pEffect;
 }

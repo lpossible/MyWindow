@@ -1,11 +1,13 @@
 #pragma once
 #include "header.h"
 #include "ShaderSimpler.h"
+#include "RenderTarget.h"
 
 
 enum  EShaderType
 {
 	EST_BasicLighting,
+	ESS_PongShading,
 	EST_End
 };
 
@@ -29,20 +31,23 @@ public:
 	void OpenSampler(EShaderType e);
 	void CallFPS();
 
+	//
+	void SetScreenShot(bool flag) { m_bStartShoot = flag; }
+	bool GetScreenShot() { return m_bStartShoot; }
 private:
 	IDirect3D9* m_d3d;
 	IDirect3DDevice9* m_d3ddevice;
 
+
 	ShaderSimpler* m_pSimpler;
 
-	//
-	ID3DXMesh* m_meshBox;
-	ID3DXMesh* m_meshSphere;
-		//
-	ID3DXEffect* m_pEffect;
 	D3DXVECTOR3	m_lightPos = D3DXVECTOR3(0, 0, 0);
 	HWND m_hwnd;
 
 	//
 	float FPS;
+
+	//
+	bool m_bStartShoot = false;
+	CRenderTarget* m_shotRender = nullptr;
 };
